@@ -7,6 +7,7 @@ import Enhanced3DChart from './components/charts/Enhanced3DChart';
 import Enhanced3DDonut from './components/charts/Enhanced3DDonut';
 import AnimatedTransactions from './components/animations/AnimatedTransactions';
 import ParticleBackground from './components/effects/ParticleBackground';
+import { useIsMobile } from './hooks/use-mobile';
 import './App.css';
 
 // Loading component for 3D elements
@@ -21,6 +22,8 @@ const LoadingSpinner = () => (
 );
 
 function App() {
+  const isMobile = useIsMobile();
+  
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -54,7 +57,9 @@ function App() {
       
       {/* Main Content */}
       <motion.div 
-        className="flex-1 p-8 relative z-10"
+        className={`flex-1 relative z-10 ${
+          isMobile ? 'p-4 pt-20' : 'p-8'
+        }`}
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -66,7 +71,11 @@ function App() {
         
         {/* Stats Grid */}
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          className={`grid gap-4 mb-6 ${
+            isMobile 
+              ? 'grid-cols-1 sm:grid-cols-2' 
+              : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'
+          }`}
           variants={itemVariants}
         >
           <AnimatedCard title="Total Revenue" value="$24,560" index={0} />
@@ -77,7 +86,11 @@ function App() {
         
         {/* Enhanced 3D Charts Grid */}
         <motion.div 
-          className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8"
+          className={`grid gap-4 mb-6 ${
+            isMobile 
+              ? 'grid-cols-1' 
+              : 'grid-cols-1 lg:grid-cols-2 gap-8 mb-8'
+          }`}
           variants={itemVariants}
         >
           <motion.div
@@ -102,7 +115,11 @@ function App() {
 
         {/* Floating Action Button */}
         <motion.button
-          className="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full shadow-lg flex items-center justify-center z-20"
+          className={`fixed z-20 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full shadow-lg flex items-center justify-center ${
+            isMobile 
+              ? 'bottom-4 right-4 w-12 h-12' 
+              : 'bottom-8 right-8 w-16 h-16'
+          }`}
           whileHover={{ 
             scale: 1.1,
             boxShadow: "0 0 30px rgba(245, 158, 11, 0.5)"
@@ -121,7 +138,7 @@ function App() {
             animate={{ rotate: 360 }}
             transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
           >
-            <span className="text-white text-2xl">⚡</span>
+            <span className={`text-white ${isMobile ? 'text-lg' : 'text-2xl'}`}>⚡</span>
           </motion.div>
         </motion.button>
       </motion.div>

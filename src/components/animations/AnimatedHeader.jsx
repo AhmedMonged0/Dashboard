@@ -1,8 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Menu, Bell, Search, User } from 'lucide-react';
+import { useIsMobile } from '../../hooks/use-mobile';
 
 const AnimatedHeader = () => {
+  const isMobile = useIsMobile();
+  
   const letterVariants = {
     hidden: { opacity: 0, y: 50, rotateX: -90 },
     visible: (i) => ({
@@ -22,14 +25,20 @@ const AnimatedHeader = () => {
 
   return (
     <motion.div 
-      className="flex items-center justify-between mb-8"
+      className={`flex items-center justify-between ${
+        isMobile ? 'mb-4 flex-col gap-4' : 'mb-8'
+      }`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="flex items-center gap-6">
+      <div className={`flex items-center ${
+        isMobile ? 'gap-2 flex-col text-center' : 'gap-6'
+      }`}>
         <motion.h1 
-          className="text-white text-4xl font-bold flex"
+          className={`text-white font-bold flex ${
+            isMobile ? 'text-2xl' : 'text-4xl'
+          }`}
           style={{ perspective: '1000px' }}
         >
           {title.split('').map((letter, i) => (
@@ -58,7 +67,9 @@ const AnimatedHeader = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 1, duration: 0.5 }}
-          className="text-slate-400 text-sm"
+          className={`text-slate-400 ${
+            isMobile ? 'text-xs' : 'text-sm'
+          }`}
         >
           <motion.div
             animate={{ 
@@ -76,26 +87,32 @@ const AnimatedHeader = () => {
         </motion.div>
       </div>
 
-      <div className="flex items-center gap-4">
-        {/* Search bar */}
-        <motion.div
-          initial={{ opacity: 0, width: 0 }}
-          animate={{ opacity: 1, width: 'auto' }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-          className="relative"
-        >
-          <motion.input
-            type="text"
-            placeholder="Search..."
-            className="bg-slate-700 text-white px-4 py-2 pl-10 rounded-lg border border-slate-600 focus:border-yellow-400 focus:outline-none transition-colors"
-            whileFocus={{ scale: 1.05 }}
-          />
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={16} />
-        </motion.div>
+      <div className={`flex items-center ${
+        isMobile ? 'gap-2' : 'gap-4'
+      }`}>
+        {/* Search bar - Hide on mobile */}
+        {!isMobile && (
+          <motion.div
+            initial={{ opacity: 0, width: 0 }}
+            animate={{ opacity: 1, width: 'auto' }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="relative"
+          >
+            <motion.input
+              type="text"
+              placeholder="Search..."
+              className="bg-slate-700 text-white px-4 py-2 pl-10 rounded-lg border border-slate-600 focus:border-yellow-400 focus:outline-none transition-colors"
+              whileFocus={{ scale: 1.05 }}
+            />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={16} />
+          </motion.div>
+        )}
 
         {/* Notification bell */}
         <motion.button
-          className="relative p-3 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors"
+          className={`relative bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors ${
+            isMobile ? 'p-2' : 'p-3'
+          }`}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           initial={{ opacity: 0, rotate: -180 }}
@@ -112,7 +129,7 @@ const AnimatedHeader = () => {
               repeatDelay: 3
             }}
           >
-            <Bell className="text-white" size={20} />
+            <Bell className="text-white" size={isMobile ? 16 : 20} />
           </motion.div>
           <motion.div
             className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"
@@ -129,27 +146,31 @@ const AnimatedHeader = () => {
 
         {/* User profile */}
         <motion.button
-          className="p-3 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors"
+          className={`bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors ${
+            isMobile ? 'p-2' : 'p-3'
+          }`}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.9, duration: 0.5 }}
         >
-          <User className="text-white" size={20} />
+          <User className="text-white" size={isMobile ? 16 : 20} />
         </motion.button>
 
-        {/* Menu button */}
-        <motion.button
-          className="p-3 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors"
-          whileHover={{ scale: 1.1, rotate: 90 }}
-          whileTap={{ scale: 0.9 }}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1.1, duration: 0.5 }}
-        >
-          <Menu className="text-white" size={24} />
-        </motion.button>
+        {/* Menu button - Hide on mobile since we have hamburger menu */}
+        {!isMobile && (
+          <motion.button
+            className="p-3 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors"
+            whileHover={{ scale: 1.1, rotate: 90 }}
+            whileTap={{ scale: 0.9 }}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1.1, duration: 0.5 }}
+          >
+            <Menu className="text-white" size={24} />
+          </motion.button>
+        )}
       </div>
     </motion.div>
   );

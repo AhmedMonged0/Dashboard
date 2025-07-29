@@ -1,7 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useIsMobile } from '../../hooks/use-mobile';
 
 const AnimatedCard = ({ title, value, index = 0, className = "" }) => {
+  const isMobile = useIsMobile();
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 50, rotateX: -15 }}
@@ -13,15 +16,17 @@ const AnimatedCard = ({ title, value, index = 0, className = "" }) => {
         stiffness: 100
       }}
       whileHover={{ 
-        scale: 1.05,
-        rotateY: 5,
-        rotateX: 5,
+        scale: isMobile ? 1.02 : 1.05,
+        rotateY: isMobile ? 0 : 5,
+        rotateX: isMobile ? 0 : 5,
         transition: { duration: 0.3 }
       }}
       whileTap={{ scale: 0.95 }}
-      className={`bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl p-6 cursor-pointer
+      className={`bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl cursor-pointer
                   shadow-lg hover:shadow-2xl transition-shadow duration-300
-                  border border-slate-600 hover:border-yellow-400/50 ${className}`}
+                  border border-slate-600 hover:border-yellow-400/50 ${
+                    isMobile ? 'p-4' : 'p-6'
+                  } ${className}`}
       style={{
         transformStyle: 'preserve-3d',
         perspective: '1000px'
@@ -32,9 +37,13 @@ const AnimatedCard = ({ title, value, index = 0, className = "" }) => {
         animate={{ opacity: 1 }}
         transition={{ delay: index * 0.1 + 0.3 }}
       >
-        <h3 className="text-slate-400 text-sm font-medium mb-2">{title}</h3>
+        <h3 className={`text-slate-400 font-medium mb-2 ${
+          isMobile ? 'text-xs' : 'text-sm'
+        }`}>{title}</h3>
         <motion.p 
-          className="text-white text-3xl font-bold"
+          className={`text-white font-bold ${
+            isMobile ? 'text-2xl' : 'text-3xl'
+          }`}
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ 
