@@ -95,28 +95,7 @@ const AnimatedSidebar = () => {
         animate={getSidebarState()}
         transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-      {/* Background particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-yellow-400/20 rounded-full"
-            initial={{ 
-              x: Math.random() * 100 + '%',
-              y: Math.random() * 100 + '%'
-            }}
-            animate={{ 
-              y: [null, Math.random() * 100 + '%'],
-              opacity: [0.2, 0.8, 0.2]
-            }}
-            transition={{
-              duration: Math.random() * 3 + 2,
-              repeat: Infinity,
-              delay: i * 0.1
-            }}
-          />
-        ))}
-      </div>
+
 
       {/* Toggle button - Only show on desktop */}
       {!isMobile && (
@@ -154,30 +133,13 @@ const AnimatedSidebar = () => {
         animate={isExpanded ? "expanded" : "collapsed"}
       >
         {/* React Logo */}
-        <motion.div 
+        <div 
           className="w-12 h-12 rounded-lg bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center"
-          whileHover={{ 
-            scale: 1.1,
-            rotate: 360,
-            transition: { duration: 0.5 }
-          }}
         >
           <div className="w-8 h-8 border-2 border-white rounded-full relative">
-            <motion.div 
-              className="absolute inset-0 border-2 border-white rounded-full"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              style={{ transform: 'rotate(45deg)' }}
-            />
-            <motion.div 
-              className="absolute inset-0 border-2 border-white rounded-full"
-              animate={{ rotate: -360 }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              style={{ transform: 'rotate(-45deg)' }}
-            />
             <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
           </div>
-        </motion.div>
+        </div>
         
         {/* JS Logo */}
         <AnimatePresence>
@@ -187,10 +149,6 @@ const AnimatedSidebar = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              whileHover={{ 
-                scale: 1.1,
-                boxShadow: "0 0 20px rgba(251, 191, 36, 0.5)"
-              }}
             >
               <span className="text-black font-bold text-lg">JS</span>
             </motion.div>
@@ -210,38 +168,20 @@ const AnimatedSidebar = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <motion.a
+                <a
                   href="#"
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 relative overflow-hidden ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 ${
                     item.active
                       ? 'bg-slate-700 text-white border-l-4 border-yellow-400'
                       : 'text-slate-400 hover:text-white hover:bg-slate-700'
                   }`}
-                  whileHover={{ 
-                    scale: 1.02,
-                    x: 5
-                  }}
-                  whileTap={{ scale: 0.98 }}
                 >
-                  {/* Hover effect background */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-transparent"
-                    initial={{ x: '-100%' }}
-                    whileHover={{ x: '0%' }}
-                    transition={{ duration: 0.3 }}
-                  />
-                  
-                  <motion.div
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <IconComponent size={20} />
-                  </motion.div>
+                  <IconComponent size={20} />
                   
                   <AnimatePresence>
                     {(isExpanded || (isMobile && isMobileMenuOpen)) && (
                       <motion.span 
-                        className="font-medium relative z-10"
+                        className="font-medium"
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -10 }}
@@ -251,7 +191,7 @@ const AnimatedSidebar = () => {
                       </motion.span>
                     )}
                   </AnimatePresence>
-                </motion.a>
+                </a>
               </motion.li>
             );
           })}

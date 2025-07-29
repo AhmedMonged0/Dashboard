@@ -1,18 +1,20 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
 import AnimatedSidebar from './components/animations/AnimatedSidebar';
 import AnimatedHeader from './components/animations/AnimatedHeader';
 import AnimatedCard from './components/animations/AnimatedCard';
-import Enhanced3DChart from './components/charts/Enhanced3DChart';
-import Enhanced3DDonut from './components/charts/Enhanced3DDonut';
 import AnimatedTransactions from './components/animations/AnimatedTransactions';
-import ParticleBackground from './components/effects/ParticleBackground';
 import { useIsMobile } from './hooks/use-mobile';
 import './App.css';
 
-// Loading component for 3D elements
+// Lazy load heavy components
+const Enhanced3DChart = lazy(() => import('./components/charts/Enhanced3DChart'));
+const Enhanced3DDonut = lazy(() => import('./components/charts/Enhanced3DDonut'));
+const ParticleBackground = lazy(() => import('./components/effects/ParticleBackground'));
+
+// Enhanced loading spinner for 3D elements
 const LoadingSpinner = () => (
-  <div className="flex items-center justify-center h-full">
+  <div className="flex items-center justify-center h-64">
     <motion.div
       className="w-8 h-8 border-4 border-yellow-400 border-t-transparent rounded-full"
       animate={{ rotate: 360 }}
@@ -24,33 +26,43 @@ const LoadingSpinner = () => (
 function App() {
   const isMobile = useIsMobile();
   
+  // Reduce animations on mobile for better performance
+  React.useEffect(() => {
+    if (isMobile) {
+      document.body.classList.add('mobile-optimized');
+    } else {
+      document.body.classList.remove('mobile-optimized');
+    }
+  }, [isMobile]);
+  
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3
+        duration: 0.3
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      y: 0,
       transition: {
-        type: "spring",
-        stiffness: 100
+        duration: 0.2
       }
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex relative overflow-hidden">
-      {/* Particle Background */}
-      <ParticleBackground />
+      {/* Particle Background - Only on desktop for performance */}
+      {!isMobile && (
+        <Suspense fallback={null}>
+          <ParticleBackground />
+        </Suspense>
+      )}
       
       {/* Animated Sidebar */}
       <AnimatedSidebar />
@@ -93,19 +105,13 @@ function App() {
           }`}
           variants={itemVariants}
         >
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
+          <Suspense fallback={<LoadingSpinner />}>
             <Enhanced3DChart title="3D Overview Analytics" />
-          </motion.div>
+          </Suspense>
           
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
+          <Suspense fallback={<LoadingSpinner />}>
             <Enhanced3DDonut title="3D Traffic Distribution" />
-          </motion.div>
+          </Suspense>
         </motion.div>
         
         {/* Animated Transactions */}
@@ -114,33 +120,15 @@ function App() {
         </motion.div>
 
         {/* Floating Action Button */}
-        <motion.button
-          className={`fixed z-20 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full shadow-lg flex items-center justify-center ${
+        <button
+          className={`fixed z-20 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full shadow-lg flex items-center justify-center hover:shadow-xl transition-shadow duration-200 ${
             isMobile 
               ? 'bottom-4 right-4 w-12 h-12' 
               : 'bottom-8 right-8 w-16 h-16'
           }`}
-          whileHover={{ 
-            scale: 1.1,
-            boxShadow: "0 0 30px rgba(245, 158, 11, 0.5)"
-          }}
-          whileTap={{ scale: 0.9 }}
-          animate={{ 
-            y: [0, -10, 0],
-          }}
-          transition={{ 
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
         >
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-          >
-            <span className={`text-white ${isMobile ? 'text-lg' : 'text-2xl'}`}>⚡</span>
-          </motion.div>
-        </motion.button>
+          <span className={`text-white ${isMobile ? 'text-lg' : 'text-2xl'}`}>⚡</span>
+        </button>
       </motion.div>
 
       {/* Ambient lighting effect */}

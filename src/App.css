@@ -129,6 +129,7 @@
   /* Prevent horizontal scroll */
   body {
     overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
   }
   
   /* Improve touch targets */
@@ -140,5 +141,36 @@
   /* Better text readability on mobile */
   .mobile-text {
     line-height: 1.6;
+  }
+  
+  /* Reduce animations on mobile for better performance */
+  * {
+    animation-duration: 0.1s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.1s !important;
+  }
+  
+  /* Optimize for mobile performance */
+  .mobile-optimized {
+    will-change: auto;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  
+  /* Disable expensive effects on mobile */
+  .no-mobile-effects {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+  
+  /* Reduce GPU usage */
+  * {
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
   }
 }

@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useIsMobile } from '../../hooks/use-mobile';
 
 const AnimatedTransactions = () => {
+  const isMobile = useIsMobile();
   const transactions = [
     { id: 1, name: 'Customers', status: 'Complete', progress: 100 },
     { id: 2, name: 'Customers', status: 'Complete', progress: 75 },
@@ -14,131 +16,67 @@ const AnimatedTransactions = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
+        duration: 0.3
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, x: -50, scale: 0.8 },
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      x: 0,
-      scale: 1,
       transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 12
+        duration: 0.2
       }
     }
   };
 
   return (
-    <motion.div 
-      className="bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl p-6 border border-slate-600"
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.8 }}
-      whileHover={{ 
-        scale: 1.02,
-        boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
-      }}
+    <div 
+      className={`bg-gradient-to-br from-slate-700 to-slate-800 rounded-2xl border border-slate-600 hover:shadow-lg transition-shadow duration-200 ${
+        isMobile ? 'p-4' : 'p-6'
+      }`}
     >
-      <motion.h3 
-        className="text-white text-xl font-semibold mb-6"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1 }}
+      <h3 
+        className={`text-white font-semibold mb-6 ${
+          isMobile ? 'text-lg' : 'text-xl'
+        }`}
       >
         Recent Transactions
-      </motion.h3>
+      </h3>
       
-      <motion.div 
-        className="space-y-4"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
+      <div className={`${isMobile ? 'space-y-3' : 'space-y-4'}`}>
         {transactions.map((transaction, index) => (
-          <motion.div 
+          <div 
             key={transaction.id}
-            variants={itemVariants}
             className="flex items-center justify-between group"
-            whileHover={{ x: 10 }}
           >
             <div className="flex items-center gap-4">
-              <motion.div
-                className="w-2 h-2 bg-yellow-400 rounded-full"
-                animate={{ 
-                  scale: [1, 1.5, 1],
-                  opacity: [0.5, 1, 0.5]
-                }}
-                transition={{ 
-                  duration: 2,
-                  repeat: Infinity,
-                  delay: index * 0.2
-                }}
-              />
+              <div className="w-2 h-2 bg-yellow-400 rounded-full" />
               
-              <span className="text-slate-400 group-hover:text-white transition-colors">
+              <span className={`text-slate-400 group-hover:text-white transition-colors ${
+                isMobile ? 'text-sm' : 'text-base'
+              }`}>
                 {transaction.name}
               </span>
               
-              <div className="w-32 h-2 bg-slate-600 rounded-full overflow-hidden">
-                <motion.div 
-                  className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${transaction.progress}%` }}
-                  transition={{ 
-                    duration: 1.5,
-                    delay: 1.2 + index * 0.1,
-                    ease: "easeOut"
-                  }}
+              <div className={`bg-slate-600 rounded-full overflow-hidden h-2 ${
+                isMobile ? 'w-20' : 'w-32'
+              }`}>
+                <div 
+                  className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full transition-all duration-1000"
+                  style={{ width: `${transaction.progress}%` }}
                 />
               </div>
             </div>
             
-            <motion.span 
-              className="text-yellow-400 text-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 + index * 0.1 }}
-              whileHover={{ 
-                scale: 1.1,
-                textShadow: "0 0 10px rgba(245, 158, 11, 0.5)"
-              }}
-            >
+            <span className={`text-yellow-400 ${isMobile ? 'text-xs' : 'text-sm'}`}>
               {transaction.status}()
-            </motion.span>
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {/* Floating elements */}
-      <div className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
-        {[...Array(5)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-yellow-400/30 rounded-full"
-            initial={{ 
-              x: Math.random() * 100 + '%',
-              y: '100%',
-              opacity: 0
-            }}
-            animate={{ 
-              y: '-10%',
-              opacity: [0, 1, 0]
-            }}
-            transition={{
-              duration: 4,
-              delay: i * 0.8,
-              repeat: Infinity,
-              repeatDelay: 3
-            }}
-          />
+            </span>
+          </div>
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 };
 

@@ -7,18 +7,13 @@ const AnimatedHeader = () => {
   const isMobile = useIsMobile();
   
   const letterVariants = {
-    hidden: { opacity: 0, y: 50, rotateX: -90 },
-    visible: (i) => ({
+    hidden: { opacity: 0 },
+    visible: {
       opacity: 1,
-      y: 0,
-      rotateX: 0,
       transition: {
-        delay: i * 0.1,
-        duration: 0.6,
-        type: "spring",
-        stiffness: 100
+        duration: 0.3
       }
-    })
+    }
   };
 
   const title = "DASHBOARD";
@@ -35,56 +30,22 @@ const AnimatedHeader = () => {
       <div className={`flex items-center ${
         isMobile ? 'gap-2 flex-col text-center' : 'gap-6'
       }`}>
-        <motion.h1 
-          className={`text-white font-bold flex ${
+        <h1 
+          className={`text-white font-bold ${
             isMobile ? 'text-2xl' : 'text-4xl'
           }`}
-          style={{ perspective: '1000px' }}
         >
-          {title.split('').map((letter, i) => (
-            <motion.span
-              key={i}
-              custom={i}
-              variants={letterVariants}
-              initial="hidden"
-              animate="visible"
-              whileHover={{
-                scale: 1.2,
-                color: '#f59e0b',
-                textShadow: '0 0 20px rgba(245, 158, 11, 0.5)',
-                transition: { duration: 0.2 }
-              }}
-              className="inline-block cursor-pointer"
-              style={{ transformStyle: 'preserve-3d' }}
-            >
-              {letter}
-            </motion.span>
-          ))}
-        </motion.h1>
+          {title}
+        </h1>
 
-        {/* Animated subtitle */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1, duration: 0.5 }}
+        {/* Subtitle */}
+        <div
           className={`text-slate-400 ${
             isMobile ? 'text-xs' : 'text-sm'
           }`}
         >
-          <motion.div
-            animate={{ 
-              opacity: [0.5, 1, 0.5],
-              scale: [1, 1.05, 1]
-            }}
-            transition={{ 
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            Real-time Analytics
-          </motion.div>
-        </motion.div>
+          Real-time Analytics
+        </div>
       </div>
 
       <div className={`flex items-center ${
@@ -109,67 +70,31 @@ const AnimatedHeader = () => {
         )}
 
         {/* Notification bell */}
-        <motion.button
+        <button
           className={`relative bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors ${
             isMobile ? 'p-2' : 'p-3'
           }`}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          initial={{ opacity: 0, rotate: -180 }}
-          animate={{ opacity: 1, rotate: 0 }}
-          transition={{ delay: 0.7, duration: 0.5 }}
         >
-          <motion.div
-            animate={{ 
-              rotate: [0, 15, -15, 0],
-            }}
-            transition={{ 
-              duration: 2,
-              repeat: Infinity,
-              repeatDelay: 3
-            }}
-          >
-            <Bell className="text-white" size={isMobile ? 16 : 20} />
-          </motion.div>
-          <motion.div
-            className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"
-            animate={{ 
-              scale: [1, 1.2, 1],
-              opacity: [1, 0.7, 1]
-            }}
-            transition={{ 
-              duration: 1,
-              repeat: Infinity
-            }}
-          />
-        </motion.button>
+          <Bell className="text-white" size={isMobile ? 16 : 20} />
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full" />
+        </button>
 
         {/* User profile */}
-        <motion.button
+        <button
           className={`bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors ${
             isMobile ? 'p-2' : 'p-3'
           }`}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.9, duration: 0.5 }}
         >
           <User className="text-white" size={isMobile ? 16 : 20} />
-        </motion.button>
+        </button>
 
         {/* Menu button - Hide on mobile since we have hamburger menu */}
         {!isMobile && (
-          <motion.button
+          <button
             className="p-3 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors"
-            whileHover={{ scale: 1.1, rotate: 90 }}
-            whileTap={{ scale: 0.9 }}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 1.1, duration: 0.5 }}
           >
             <Menu className="text-white" size={24} />
-          </motion.button>
+          </button>
         )}
       </div>
     </motion.div>
